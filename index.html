@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Reciclaje</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eaf6ea;
+      color: #333;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+    }
+    form {
+      margin-bottom: 2rem;
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .hidden {
+      display: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    th {
+      background-color: #d0f0c0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Registro de Participación en Reciclaje</h1>
+  </header>
+  <main>
+    <form id="userForm">
+      <h2>Registro de Usuario</h2>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" required>
+      <label for="correo">Correo Electrónico:</label>
+      <input type="email" id="correo" required>
+      <label for="telefono">Teléfono:</label>
+      <input type="tel" id="telefono" required>
+      <button type="button" onclick="registrarUsuario()">Registrar</button>
+    </form>
+
+    <form id="formInstrumento1" class="hidden">
+      <h2>Instrumento 1: Registro de Materiales Reciclados</h2>
+      <label for="material">Tipo de Material:</label>
+      <select id="material">
+        <option>Plástico</option>
+        <option>Cartón</option>
+        <option>Vidrio</option>
+        <option>Aluminio</option>
+        <option>Papel</option>
+        <option>Electrónicos</option>
+      </select>
+      <label for="cantidad">Cantidad Reciclada (KG):</label>
+      <input type="number" id="cantidad" min="0" step="0.1" required>
+      <label for="fechaIngreso">Fecha de Ingreso:</label>
+      <input type="date" id="fechaIngreso" required>
+      <label for="estado">Estado del Material:</label>
+      <select id="estado">
+        <option>Limpio</option>
+        <option>Parcialmente limpio</option>
+        <option>Sucio</option>
+      </select>
+      <label for="punto">Punto de Reciclaje:</label>
+      <input type="text" id="punto" required>
+      <button type="button" onclick="registrarInstrumento1()">Guardar Material</button>
+    </form>
+
+    <form id="formInstrumento2" class="hidden">
+      <h2>Instrumento 2: Seguimiento de Participación</h2>
+      <label for="entregas">Número de Entregas (mes):</label>
+      <input type="number" id="entregas" min="0" required>
+      <label for="tipos">Tipos de Materiales Reciclados:</label>
+      <input type="text" id="tipos" required>
+      <label for="ultimaFecha">Fecha Última Actividad:</label>
+      <input type="date" id="ultimaFecha" required>
+      <label for="nivel">Nivel de Compromiso:</label>
+      <select id="nivel">
+        <option>Bajo (1-2 entregas)</option>
+        <option>Medio (3-5)</option>
+        <option>Alto (6 o más)</option>
+      </select>
+      <label for="comentario">Comentario o Sugerencia:</label>
+      <textarea id="comentario"></textarea>
+      <button type="button" onclick="guardarSeguimiento()">Finalizar</button>
+    </form>
+
+    <div id="resumen" class="hidden">
+      <h2>Resumen de Datos Registrados</h2>
+      <table id="tablaResumen"></table>
+    </div>
+  </main>
+
+  <script>
+    let usuariosRegistrados = 0;
+    const maxUsuarios = 5;
+    const registros = [];
+
+    function registrarUsuario() {
+      if (usuariosRegistrados >= maxUsuarios) {
+        alert("Ya se ha alcanzado el límite de usuarios registrados.");
+        return;
+      }
+      const nombre = document.getElementById("nombre").value;
+      const correo = document.getElementById("correo").value;
+      const telefono = document.getElementById("telefono").value;
+
+      if (!nombre || !correo || !telefono) {
+        alert("Por favor, completa todos los campos.");
+        return;
+      }
+
+      registros.push({ nombre, correo, telefono });
+      usuariosRegistrados++;
+      document.getElementById("userForm").classList.add("hidden");
+      document.getElementById("formInstrumento1").classList.remove("hidden");
+    }
+
+    function registrarInstrumento1() {
+      const registro = registros[registros.length - 1];
+      registro.material = document.getElementById("material").value;
+      registro.cantidad = parseFloat(document.getElementById("cantidad").value);
+      registro.fechaIngreso = document.getElementById("fechaIngreso").value;
+      registro.estado = document.getElementById("estado").value;
+      registro.punto = document.getElementById("punto").value;
+
+      if (!registro.cantidad || registro.cantidad <= 0) {
+        alert("Cantidad inválida.");
+        return;
+      }
+
+      document.getElementById("formInstrumento1").classList.add("hidden");
+      document.getElementById("formInstrumento2").classList.remove("hidden");
+    }
+
+    function guardarSeguimiento() {
+      const registro = registros[registros.length - 1];
+      registro.entregas = parseInt(document.getElementById("entregas").value);
+      registro.tipos = document.getElementById("tipos").value;
+      registro.ultimaFecha = document.getElementById("ultimaFecha").value;
+      registro.nivel = document.getElementById("nivel").value;
+      registro.comentario = document.getElementById("comentario").value;
+
+      localStorage.setItem("registros", JSON.stringify(registros));
+      mostrarResumen();
+    }
+
+    function mostrarResumen() {
+      const tabla = document.getElementById("tablaResumen");
+      tabla.innerHTML = "";
+
+      const encabezado = `
+        <tr>
+          <th>Nombre</th><th>Correo</th><th>Teléfono</th>
+          <th>Material</th><th>Cantidad</th><th>Fecha</th>
+          <th>Estado</th><th>Punto</th>
+          <th>Entregas</th><th>Tipos</th><th>Última Fecha</th>
+          <th>Nivel</th><th>Comentario</th>
+        </tr>`;
+      tabla.innerHTML += encabezado;
+
+      registros.forEach(r => {
+        tabla.innerHTML += `
+        <tr>
+          <td>${r.nombre}</td><td>${r.correo}</td><td>${r.telefono}</td>
+          <td>${r.material}</td><td>${r.cantidad}</td><td>${r.fechaIngreso}</td>
+          <td>${r.estado}</td><td>${r.punto}</td>
+          <td>${r.entregas}</td><td>${r.tipos}</td><td>${r.ultimaFecha}</td>
+          <td>${r.nivel}</td><td>${r.comentario}</td>
+        </tr>`;
+      });
+
+      document.getElementById("formInstrumento2").classList.add("hidden");
+      document.getElementById("resumen").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
