@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Administración - Reciclaje</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eafaf1;
+      padding: 30px;
+    }
+    h1 {
+      color: #2e7d32;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #388e3c;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    tr:hover {
+      background-color: #dcedc8;
+    }
+  </style>
+</head>
+<body>
+  <h1>📋 Panel de Administración - Datos de Reciclaje</h1>
+  <table id="tablaFinal">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Tipo Material</th>
+        <th>Cantidad (kg)</th>
+        <th>Fecha Ingreso</th>
+        <th>Estado Material</th>
+        <th>Punto Reciclaje</th>
+        <th>Entregas/Mes</th>
+        <th>Tipos Materiales</th>
+        <th>Fecha Última</th>
+        <th>Compromiso</th>
+        <th>Comentario</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const tablaBody = document.querySelector("#tablaFinal tbody");
+    const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    usuarios.forEach(user => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${user.nombre || "-"}</td>
+        <td>${user.instrumento1?.tipo || "-"}</td>
+        <td>${user.instrumento1?.cantidad || "-"}</td>
+        <td>${user.instrumento1?.fecha || "-"}</td>
+        <td>${user.instrumento1?.estado || "-"}</td>
+        <td>${user.instrumento1?.punto || "-"}</td>
+        <td>${user.instrumento2?.entregas || "-"}</td>
+        <td>${user.instrumento2?.tipos || "-"}</td>
+        <td>${user.instrumento2?.fecha || "-"}</td>
+        <td>${user.instrumento2?.compromiso || "-"}</td>
+        <td>${user.instrumento2?.comentario || "-"}</td>
+      `;
+      tablaBody.appendChild(row);
+    });
+  </script>
+</body>
+</html>
